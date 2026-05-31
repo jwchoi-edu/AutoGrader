@@ -4,12 +4,8 @@
   color: #000000;
   background-color: #ffffff;
   font-family:
-    "Pretendard",
-    "Apple SD Gothic Neo",
-    "Noto Sans KR",
-    system-ui,
-    -apple-system,
-    sans-serif;
+    "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui,
+    -apple-system, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

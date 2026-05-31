@@ -19,8 +19,9 @@ export function LoginPage({ authMessage, onSignIn }: LoginPageProps) {
               Login to AutoGrader
             </h1>
             <p className="mt-2 text-sm text-slate-600 whitespace-nowrap">
-              Google SSO로 로그인합니다.<br/>{SCHOOL_DOMAIN} 계정만 접근할 수
-              있습니다.
+              Google SSO로 로그인합니다.
+              <br />
+              {SCHOOL_DOMAIN} 계정만 접근할 수 있습니다.
             </p>
           </div>
 
