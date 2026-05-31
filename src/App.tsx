@@ -101,7 +101,10 @@ function App() {
     loadLocalWorkbooks()[0] ?? sampleWorkbook,
   )
   const [editingWorkbookId, setEditingWorkbookId] = useState<string | null>(null)
-  const [title, setTitle] = useState<string>('새 문제집')
+  const [title, setTitle] = useState<string>(() => {
+    const existing = loadLocalWorkbooks()
+    return `새 문제집 #${existing.length + 1}`
+  })
   const [problemCountInput, setProblemCountInput] = useState<string>(String(createDraftRows().length))
   const [draftRows, setDraftRows] = useState<ProblemDraft[]>(createDraftRows)
   const [responses, setResponses] = useState<Record<number, string | null>>({})
@@ -287,7 +290,7 @@ function App() {
   }, [gradedProblems])
 
   const resetCreateDraft = () => {
-    setTitle('새 문제집')
+    setTitle(`새 문제집 #${workbooks.length + 1}`)
     setDraftRows(createDraftRows())
     setProblemCountInput(String(createDraftRows().length))
     setEditingWorkbookId(null)
