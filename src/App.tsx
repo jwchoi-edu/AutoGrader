@@ -214,7 +214,7 @@ function App() {
       setWorkbooks(nextWorkbooks)
       setBanner(
         remoteWorkbooks.length === 0
-          ? 'Supabase에 저장된 문제집이 없어 데모 문제집을 불러왔습니다.'
+          ? '데이터베이스에 저장된 문제집이 없어 데모 문제집을 불러왔습니다.'
           : null,
       )
       setLoadingWorkbooks(false)
