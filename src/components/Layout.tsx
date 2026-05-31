@@ -7,7 +7,23 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   return (
     <div className="mx-auto min-h-screen max-w-md bg-white px-4 py-6 text-black">
-      {children}
+      <div className="min-h-[80vh]">{children}</div>
+
+      <footer className="mt-6 border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
+        <div>© 2026 Jongwon Choi. All rights reserved.</div>
+        <div className="mt-1">
+          <a
+            href="https://github.com/jwchoi-edu/AutoGrader"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-slate-600 hover:text-black"
+          >
+            Source:{' '}
+            <span className="text-blue-600 hover:text-blue-700">jwchoi-edu/AutoGrader</span>
+            {' '}— GPL 3.0
+          </a>
+        </div>
+      </footer>
     </div>
   )
 }
