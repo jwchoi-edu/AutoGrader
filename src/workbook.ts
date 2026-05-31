@@ -23,6 +23,7 @@ export const createSampleWorkbook = (): Workbook => ({
   user_id: 'demo-user',
   title: '데모 문제집',
   created_at: new Date('2026-05-31T09:00:00.000Z').toISOString(),
+  updated_at: new Date('2026-05-31T09:00:00.000Z').toISOString(),
   problems: [
     { number: 1, type: 'MULTIPLE_CHOICE', correct_answer: '4' },
     { number: 2, type: 'SHORT_ANSWER', correct_answer: '중심값' },
@@ -86,6 +87,7 @@ export const normalizeDraftToWorkbook = (
       user_id: userId,
       title: trimmedTitle,
       created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       problems: normalizedRows.map((row) => ({
         number: row.number,
         type: row.type,

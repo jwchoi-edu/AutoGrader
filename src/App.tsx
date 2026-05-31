@@ -356,6 +356,7 @@ function App() {
         isEditingPersisted && existingWorkbook !== null
           ? existingWorkbook.created_at
           : normalized.workbook.created_at,
+      updated_at: new Date().toISOString(),
     }
 
     if (isConfigured && supabase !== null && userId !== null) {

@@ -71,7 +71,16 @@ export function DashboardPage({
                 <h2 className="font-semibold text-black">{workbook.title}</h2>
                 <p className="mt-1 text-xs text-slate-500">
                   {workbook.problems.length}문항 ·{' '}
-                  {new Date(workbook.created_at).toLocaleDateString('ko-KR')}
+                  {new Date((workbook.updated_at ?? workbook.created_at)).toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                    timeZoneName: 'short',
+                  })}
                 </p>
               </button>
 
