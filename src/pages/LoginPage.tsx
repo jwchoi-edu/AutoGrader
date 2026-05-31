@@ -18,7 +18,6 @@ export function LoginPage({ authMessage, onSignIn }: LoginPageProps) {
             <h1 className="mt-1 text-xl font-bold text-black">
               Login to AutoGrader
             </h1>
-            {/* ⚠️ 여기서 whitespace-nowrap을 과감히 제거! 공간이 부족하면 알아서 줄바꿈 됨 */}
             <p className="mt-1 text-sm text-slate-600 whitespace-nowrap">
               Google SSO로 로그인합니다.
               <br />
