@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Layout } from './components/Layout'
-import { AdminPage } from './pages/AdminPage'
+import { CreatePage } from './pages/CreatePage'
 import { DashboardPage } from './pages/DashboardPage'
 import { GraderPage } from './pages/GraderPage'
 import {
@@ -24,6 +24,37 @@ import {
 const LOCAL_WORKBOOKS_KEY = 'autograder.workbooks'
 
 const sampleWorkbook = createSampleWorkbook()
+
+const clampProblemCount = (value: number) => Math.max(1, Math.min(100, Math.floor(value) || 1))
+
+const resizeDraftRows = (rows: ProblemDraft[], nextCount: number): ProblemDraft[] => {
+  const safeCount = clampProblemCount(nextCount)
+
+  if (safeCount === rows.length) {
+    return rows
+  }
+
+  if (safeCount < rows.length) {
+    return rows.slice(0, safeCount).map((row, index) => ({
+      ...row,
+      number: String(index + 1),
+    }))
+  }
+
+  const extraRows = Array.from({ length: safeCount - rows.length }, (_, index) => ({
+    number: String(rows.length + index + 1),
+    type: 'MULTIPLE_CHOICE' as const,
+    correctAnswer: '',
+  }))
+
+  return [
+    ...rows.map((row, index) => ({
+      ...row,
+      number: String(index + 1),
+    })),
+    ...extraRows,
+  ]
+}
 
 const loadLocalWorkbooks = (): Workbook[] => {
   if (typeof window === 'undefined') {
@@ -71,11 +102,13 @@ function App() {
   )
   const [editingWorkbookId, setEditingWorkbookId] = useState<string | null>(null)
   const [title, setTitle] = useState<string>('새 문제집')
+  const [problemCountInput, setProblemCountInput] = useState<string>(String(createDraftRows().length))
   const [draftRows, setDraftRows] = useState<ProblemDraft[]>(createDraftRows)
   const [responses, setResponses] = useState<Record<number, string | null>>({})
   const [draftResponses, setDraftResponses] = useState<Record<number, string>>({})
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loadingWorkbooks, setLoadingWorkbooks] = useState(false)
+  const [validationErrors, setValidationErrors] = useState<string[] | null>(null)
 
   useEffect(() => {
     const client = supabase
@@ -210,15 +243,18 @@ function App() {
 
   const summary = useMemo(() => summarizeResults(gradedProblems), [gradedProblems])
 
-  const resetAdminDraft = () => {
+  const resetCreateDraft = () => {
     setTitle('새 문제집')
     setDraftRows(createDraftRows())
+    setProblemCountInput(String(createDraftRows().length))
     setEditingWorkbookId(null)
+    setValidationErrors(null)
   }
 
   const loadWorkbookIntoEditor = (workbook: Workbook) => {
     setEditingWorkbookId(workbook.id === sampleWorkbook.id ? null : workbook.id)
     setTitle(workbook.title)
+    setProblemCountInput(String(workbook.problems.length))
     setDraftRows(
       workbook.problems.map((problem) => ({
         number: String(problem.number),
@@ -226,6 +262,7 @@ function App() {
         correctAnswer: problem.correct_answer ?? '',
       })),
     )
+    setValidationErrors(null)
   }
 
   const handleSignIn = async () => {
@@ -248,31 +285,41 @@ function App() {
     setStep('login')
   }
 
-  const handleValidate = () => {
-    const normalized = normalizeDraftToWorkbook(title, userId ?? 'demo-user', draftRows)
+  const handleProblemCountChange = (nextCount: number) => {
+    setDraftRows((currentRows) => resizeDraftRows(currentRows, nextCount))
+    setValidationErrors(null)
+  }
 
-    if (normalized.workbook === null) {
-      setBanner(normalized.errors.join(' '))
+  const handleProblemCountInputChange = (nextValue: string) => {
+    setProblemCountInput(nextValue)
+
+    if (nextValue.trim().length === 0) {
       return
     }
 
-    setDraftRows(
-      normalized.workbook.problems.map((problem) => ({
-        number: String(problem.number),
-        type: problem.type,
-        correctAnswer: problem.correct_answer ?? '',
-      })),
-    )
-    setBanner('문제집이 정렬되었습니다. 저장 버튼을 눌러 확정하세요.')
+    const nextCount = Number.parseInt(nextValue, 10)
+
+    if (Number.isFinite(nextCount)) {
+      const clampedCount = clampProblemCount(nextCount)
+      setProblemCountInput(String(clampedCount))
+      handleProblemCountChange(clampedCount)
+    }
   }
 
   const handleSaveWorkbook = async () => {
+    if (problemCountInput.trim().length === 0) {
+      setValidationErrors(['문제 개수는 1개 이상이어야 합니다.'])
+      return
+    }
+
     const normalized = normalizeDraftToWorkbook(title, userId ?? 'demo-user', draftRows)
 
     if (normalized.workbook === null) {
-      setBanner(normalized.errors.join(' '))
+      setValidationErrors(normalized.errors)
       return
     }
+
+    setValidationErrors(null)
 
     const isEditingPersisted =
       editingWorkbookId !== null && editingWorkbookId !== sampleWorkbook.id
@@ -339,7 +386,7 @@ function App() {
           loading={loadingWorkbooks}
           banner={banner}
           onCreateWorkbook={() => {
-            resetAdminDraft()
+            resetCreateDraft()
             setBanner(null)
             setStep('admin')
           }}
@@ -359,20 +406,24 @@ function App() {
 
     if (step === 'admin') {
       return (
-        <AdminPage
+        <CreatePage
           title={title}
+          problemCount={problemCountInput}
           draftRows={draftRows}
           banner={banner}
+          validationErrors={validationErrors}
           onTitleChange={setTitle}
+          onProblemCountChange={handleProblemCountInputChange}
           onDraftRowsChange={setDraftRows}
-          onValidate={handleValidate}
           onSave={() => {
             void handleSaveWorkbook()
           }}
           onBack={() => {
             setBanner(null)
+            setValidationErrors(null)
             setStep('dashboard')
           }}
+          onCloseValidationErrors={() => setValidationErrors(null)}
         />
       )
     }
