@@ -26,9 +26,26 @@ export function DashboardPage({
   return (
     <div className="space-y-6">
       <header className="border-b border-slate-200 pb-4">
-        <p className="text-xs tracking-widest text-slate-500 uppercase">Dashboard</p>
-        <h1 className="mt-1 text-xl font-bold text-black">문제집 목록</h1>
-        <p className="mt-1 text-sm text-slate-600">{userEmail}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs tracking-widest text-slate-500 uppercase">Dashboard</p>
+            <h1 className="mt-1 text-xl font-bold text-black">문제집 목록</h1>
+            <p className="mt-1 text-sm text-slate-600">{userEmail}</p>
+          </div>
+
+          <a
+            href="https://github.com/jwchoi-edu/AutoGrader/blob/main/docs/README.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-black interactive"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
+              <text x="12" y="16" textAnchor="middle" fontSize="12" fontWeight="700" fill="currentColor">?</text>
+            </svg>
+            도움말
+          </a>
+        </div>
       </header>
 
       {banner !== null ? (
