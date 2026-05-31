@@ -114,6 +114,7 @@ function App() {
   const [gradeModalOpen, setGradeModalOpen] = useState(false)
   const [gradeModalWorkbook, setGradeModalWorkbook] = useState<Workbook | null>(null)
   const [gradeStartInput, setGradeStartInput] = useState<string>('1')
+  const [scrollToTopOnNextDashboard, setScrollToTopOnNextDashboard] = useState(false)
 
   useEffect(() => {
     const client = supabase
@@ -231,6 +232,26 @@ function App() {
       saveLocalWorkbooks(workbooks)
     }
   }, [isConfigured, workbooks])
+
+  // Clear transient banners when navigating away from the dashboard.
+  useEffect(() => {
+    if (step !== 'dashboard' && banner !== null) {
+      setBanner(null)
+    }
+  }, [step, banner])
+
+  // When set, scroll to top the next time the dashboard is shown (used after saving).
+  useEffect(() => {
+    if (step === 'dashboard' && scrollToTopOnNextDashboard) {
+      try {
+        window.scrollTo({ top: 0, left: 0 })
+      } catch {
+        // ignore in non-browser environments
+      }
+
+      setScrollToTopOnNextDashboard(false)
+    }
+  }, [step, scrollToTopOnNextDashboard])
 
   const gradedProblems = useMemo(() => {
     if (selectedWorkbook === null) {
@@ -377,6 +398,8 @@ function App() {
     saveLocalWorkbooks(nextWorkbooks)
     setSelectedWorkbook(workbookToSave)
     setBanner(isConfigured ? '문제집을 데이터베이스에 저장했습니다.' : '문제집을 로컬에 저장했습니다.')
+    // Ensure dashboard scrolls to top when we return here after saving
+    setScrollToTopOnNextDashboard(true)
     setStep('dashboard')
   }
 
