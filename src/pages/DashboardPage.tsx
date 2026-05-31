@@ -42,7 +42,10 @@ export function DashboardPage({
         className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-slate-100 interactive"
         onClick={onCreateWorkbook}
       >
-        + 새 문제집 등록
+        <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        새 문제집 등록
       </button>
 
       <div className="space-y-3">
@@ -78,6 +81,9 @@ export function DashboardPage({
                   className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-black transition hover:bg-slate-100 interactive"
                   onClick={() => onEditWorkbook(workbook)}
                 >
+                  <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M3 21v-3.75L17.81 2.69a2.25 2.25 0 0 1 3.18 0l.32.32a2.25 2.25 0 0 1 0 3.18L6.5 20.75H3z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                   수정
                 </button>
                 <button
@@ -85,6 +91,9 @@ export function DashboardPage({
                   className="flex-1 rounded-lg border border-black bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 interactive"
                   onClick={() => onGradeWorkbook(workbook)}
                 >
+                  <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M5 3v18l15-9L5 3z" fill="currentColor" />
+                  </svg>
                   채점 시작
                 </button>
               </div>

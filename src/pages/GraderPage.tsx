@@ -150,6 +150,9 @@ export function GraderPage({
                   disabled={shortAnswerDraft.trim().length === 0}
                   onClick={() => recordResponse(shortAnswerDraft.trim())}
                 >
+                  <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M5 12l4 4L19 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                   확인
                 </button>
               </div>
@@ -169,21 +172,30 @@ export function GraderPage({
               disabled={currentIndex === 0}
               onClick={() => onCurrentIndexChange(Math.max(currentIndex - 1, 0))}
             >
-              이전
+                <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                  <path d="M9 6L3 12l6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                이전
             </button>
             <button
               type="button"
               className="flex-1 rounded-lg border border-slate-200 px-4 py-2.5 text-sm text-black transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 interactive"
               onClick={() => recordResponse(null)}
             >
-              Skip
+                <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                  <path d="M5 5v14l10-7L5 5z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                스킵
             </button>
             <button
               type="button"
               className="flex-1 rounded-lg border border-black bg-black px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 interactive"
               onClick={() => onComplete(currentIndex)}
             >
-              채점 완료
+                <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                  <path d="M5 12l4 4L19 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                채점 완료
             </button>
           </div>
         </div>
