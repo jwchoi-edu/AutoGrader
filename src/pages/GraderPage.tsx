@@ -19,6 +19,8 @@ const typeLabels: Record<ProblemType, string> = {
 }
 
 const answerPanelClass = 'min-h-[72px]'
+const controlButtonClass =
+  'rounded-lg border px-4 py-3 text-sm font-semibold transition interactive disabled:cursor-not-allowed disabled:opacity-40'
 
 export function GraderPage({
   workbook,
@@ -122,7 +124,8 @@ export function GraderPage({
               ))}
             </div>
           ) : currentProblem.type === 'SHORT_ANSWER' ? (
-            <div className="space-y-2">
+            <div className={`flex flex-col gap-2 ${answerPanelClass}`}>
+              <div className="flex gap-2">
               <input
                 value={shortAnswerDraft}
                 onChange={(event) => {
@@ -140,8 +143,17 @@ export function GraderPage({
                   }
                 }}
                 placeholder="답안을 입력하세요"
-                className="w-full rounded-lg border border-slate-200 px-4 py-3 text-base text-black outline-none placeholder:text-slate-400 focus:border-slate-400"
+                  className="min-w-0 flex-1 rounded-lg border border-slate-200 px-4 py-3 text-base text-black outline-none placeholder:text-slate-400 focus:border-slate-400"
               />
+                <button
+                  type="button"
+                  className={`${controlButtonClass} border-black bg-black text-white hover:bg-slate-800`}
+                  disabled={shortAnswerDraft.trim().length === 0}
+                  onClick={() => recordResponse(shortAnswerDraft.trim())}
+                >
+                  확인
+                </button>
+              </div>
             </div>
           ) : (
             <div
