@@ -22,6 +22,8 @@ export function LoginPage({ authMessage, onSignIn }: LoginPageProps) {
               Google SSO로 로그인합니다.
               <br />
               {SCHOOL_DOMAIN} 계정만 접근할 수 있습니다.
+              <br />
+              ⚠️ <b>Kakaotalk 내부 브라우저에서는 로그인이 불가합니다.</b>
             </p>
           </div>
 
