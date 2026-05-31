@@ -82,7 +82,7 @@ export function DashboardPage({
                 </button>
                 <button
                   type="button"
-                  className="flex-1 rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-medium text-black transition hover:bg-slate-200 interactive"
+                  className="flex-1 rounded-lg border border-black bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 interactive"
                   onClick={() => onGradeWorkbook(workbook)}
                 >
                   채점 시작
