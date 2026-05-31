@@ -1,3 +1,3 @@
 ## AutoGrader
 
-Supabase 기발 채점 웹 서비스
+Supabase 기반 채점 웹 서비스
