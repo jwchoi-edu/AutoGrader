@@ -12,14 +12,14 @@ interface ResultPageProps {
 const typeLabels: Record<ProblemType, string> = {
   MULTIPLE_CHOICE: '객관식',
   SHORT_ANSWER: '단답형',
-  COMPLEX_ANSWER: '서술형',
+  COMPLEX_ANSWER: '채점 불가',
 }
 
 const statusLabels = {
   correct: '정답',
   incorrect: '오답',
   skipped: '스킵',
-  ungradable: '채점 제외',
+  ungradable: '채점 불가',
 } as const
 
 export function ResultPage({
@@ -70,7 +70,7 @@ export function ResultPage({
           <p className="mt-1 font-bold text-black">{summary.skipped}</p>
         </div>
         <div className="rounded-lg border border-slate-200 py-3">
-          <p className="text-xs text-slate-500">채점 제외</p>
+          <p className="text-xs text-slate-500">채점 불가</p>
           <p className="mt-1 font-bold text-black">{summary.ungradable}</p>
         </div>
       </div>
@@ -140,7 +140,7 @@ export function ResultPage({
                     </p>
                   </div>
                 ) : (
-                  <p className="mt-1 text-sm text-slate-500">서술형 문항은 자동 채점하지 않습니다.</p>
+                  <p className="mt-1 text-sm text-slate-500">단순 채점 불가 문항입니다.</p>
                 )}
               </div>
             </div>

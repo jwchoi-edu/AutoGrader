@@ -15,7 +15,7 @@ interface AdminPageProps {
 const typeLabels: Record<ProblemType, string> = {
   MULTIPLE_CHOICE: '객관식',
   SHORT_ANSWER: '단답형',
-  COMPLEX_ANSWER: '서술형',
+  COMPLEX_ANSWER: '채점 불가',
 }
 
 export function AdminPage({
@@ -201,7 +201,7 @@ export function AdminPage({
                     inputMode={isMultipleChoice ? 'numeric' : 'text'}
                     placeholder={
                       isComplexAnswer
-                        ? '서술형 — 정답 없음'
+                        ? '채점 불가 — 정답 없음'
                         : isMultipleChoice
                           ? '1-5'
                           : '정답 텍스트'
@@ -214,7 +214,7 @@ export function AdminPage({
                       ? '1~5 입력 시 다음 칸으로 이동'
                       : isShortAnswer
                         ? 'Enter로 다음 칸 이동'
-                        : '서술형은 채점 불가'}
+                        : '단순 채점 불가'}
                   </p>
                 </div>
               </div>

@@ -15,8 +15,10 @@ interface GraderPageProps {
 const typeLabels: Record<ProblemType, string> = {
   MULTIPLE_CHOICE: '객관식',
   SHORT_ANSWER: '단답형',
-  COMPLEX_ANSWER: '서술형',
+  COMPLEX_ANSWER: '채점 불가',
 }
+
+const answerPanelClass = 'min-h-[72px]'
 
 export function GraderPage({
   workbook,
@@ -103,7 +105,7 @@ export function GraderPage({
       {currentProblem !== null ? (
         <div className="space-y-3 pb-4">
           {currentProblem.type === 'MULTIPLE_CHOICE' ? (
-            <div className="grid grid-cols-5 gap-2">
+            <div className={`grid grid-cols-5 gap-2 ${answerPanelClass}`}>
               {['1', '2', '3', '4', '5'].map((choice) => (
                 <button
                   key={choice}
@@ -142,8 +144,10 @@ export function GraderPage({
               />
             </div>
           ) : (
-            <div className="flex min-h-[240px] items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600">
-              서술형 문항입니다. (자동 채점 제외)
+            <div
+              className={`flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600 ${answerPanelClass}`}
+            >
+              채점 불가 문항입니다. (단순 채점 불가)
             </div>
           )}
 
