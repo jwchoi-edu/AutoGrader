@@ -156,7 +156,7 @@ function App() {
 
       if (session === null) {
         setAuthStatus('signedOut')
-        setAuthMessage('Google 계정으로 로그인해 주세요.')
+        setAuthMessage(null)
         setStep('login')
         return
       }
@@ -173,7 +173,7 @@ function App() {
         setAuthStatus('signedOut')
         setUserId(null)
         setUserEmail(null)
-        setAuthMessage('Google 계정으로 로그인해 주세요.')
+        setAuthMessage(null)
         setStep('login')
         return
       }
@@ -281,7 +281,7 @@ function App() {
     setAuthStatus('signedOut')
     setUserId(null)
     setUserEmail(null)
-    setAuthMessage('Google 계정으로 로그인해 주세요.')
+    setAuthMessage(null)
     setStep('login')
   }
 
@@ -353,7 +353,7 @@ function App() {
     setWorkbooks(nextWorkbooks)
     saveLocalWorkbooks(nextWorkbooks)
     setSelectedWorkbook(workbookToSave)
-    setBanner(isConfigured ? '문제집을 Supabase에 저장했습니다.' : '문제집을 로컬에 저장했습니다.')
+    setBanner(isConfigured ? '문제집을 데이터베이스에 저장했습니다.' : '문제집을 로컬에 저장했습니다.')
     setStep('dashboard')
   }
 
