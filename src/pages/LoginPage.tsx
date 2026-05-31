@@ -9,21 +9,23 @@ interface LoginPageProps {
 export function LoginPage({ authMessage, onSignIn }: LoginPageProps) {
   return (
     <div className="flex min-h-[80vh] flex-col justify-center">
-      <header className="mb-8 border-b border-slate-200 pb-6">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-xs tracking-widest text-slate-500">
+      <header className="pb-4">
+        <div className="flex items-start justify-between gap-4 w-full">
+          <div className="min-w-0 flex-1 pr-4">
+            <p className="text-xs tracking-widest text-slate-500 uppercase">
               AutoGrader by Jongwon Choi
             </p>
-            <h1 className="mt-2 text-2xl font-bold text-black">
+            <h1 className="mt-1 text-xl font-bold text-black">
               Login to AutoGrader
             </h1>
-            <p className="mt-2 text-sm text-slate-600 whitespace-nowrap">
+            <p className="mt-1 text-sm text-slate-600 whitespace-nowrap">
               Google SSO로 로그인합니다.
               <br />
               {SCHOOL_DOMAIN} 계정만 접근할 수 있습니다.
               <br />
-              ⚠️ <b>Kakaotalk 내부 브라우저에서는 로그인이 불가합니다.</b>
+              <span className="text-amber-600 font-semibold block mt-0.5">
+                ⚠️ Kakaotalk 내부 브라우저에서는 로그인이 불가합니다.
+              </span>
             </p>
           </div>
 
@@ -31,7 +33,7 @@ export function LoginPage({ authMessage, onSignIn }: LoginPageProps) {
             href="https://github.com/jwchoi-edu/AutoGrader/blob/main/docs/README.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-black interactive"
+            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-black interactive whitespace-nowrap"
           >
             <svg
               className="h-4 w-4"
