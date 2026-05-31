@@ -126,9 +126,9 @@ export function GraderPage({
                   className={`rounded-lg border py-4 text-lg font-bold transition interactive ${
                     committedAnswer === choice
                       ? 'border-black bg-black text-white'
-                      : 'border-slate-200 text-black hover:border-black hover:bg-slate-100'
+                      : 'border-slate-200 text-black hover:border-black hover:bg-slate-100 active:bg-black! active:text-white'
                   }
-                  active:bg-black! active:text-white`}
+                  `}
                   onClick={() => recordResponse(choice)}
                 >
                   {choice}
