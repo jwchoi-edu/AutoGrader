@@ -5,10 +5,11 @@ interface GraderPageProps {
   responses: Record<number, string | null>
   draftResponses: Record<number, string>
   currentIndex: number
+  startIndex?: number
   onResponsesChange: (responses: Record<number, string | null>) => void
   onDraftResponsesChange: (draftResponses: Record<number, string>) => void
   onCurrentIndexChange: (index: number) => void
-  onComplete: () => void
+  onComplete: (endIndexExclusive: number) => void
   onBack: () => void
 }
 
@@ -64,7 +65,7 @@ export function GraderPage({
       return
     }
 
-    onComplete()
+    onComplete(currentIndex + 1)
   }
 
   const hasAnswered = (problemNumber: number): boolean => {
@@ -85,9 +86,7 @@ export function GraderPage({
         >
           ← 목록
         </button>
-        <p className="text-xs text-slate-500">
-          {answeredCount}/{sortedProblems.length}
-        </p>
+        <p className="text-xs text-slate-500">{answeredCount}/{sortedProblems.length}</p>
       </header>
 
       <p className="text-center text-xs tracking-widest text-slate-500 uppercase">
@@ -178,6 +177,13 @@ export function GraderPage({
               onClick={() => recordResponse(null)}
             >
               Skip
+            </button>
+            <button
+              type="button"
+              className="flex-1 rounded-lg border border-black bg-black px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 interactive"
+              onClick={() => onComplete(currentIndex)}
+            >
+              채점 완료
             </button>
           </div>
         </div>

@@ -107,8 +107,13 @@ function App() {
   const [responses, setResponses] = useState<Record<number, string | null>>({})
   const [draftResponses, setDraftResponses] = useState<Record<number, string>>({})
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [gradingStartIndex, setGradingStartIndex] = useState(0)
+  const [gradingEndIndexExclusive, setGradingEndIndexExclusive] = useState<number | null>(null)
   const [loadingWorkbooks, setLoadingWorkbooks] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[] | null>(null)
+  const [gradeModalOpen, setGradeModalOpen] = useState(false)
+  const [gradeModalWorkbook, setGradeModalWorkbook] = useState<Workbook | null>(null)
+  const [gradeStartInput, setGradeStartInput] = useState<string>('1')
 
   useEffect(() => {
     const client = supabase
@@ -232,16 +237,33 @@ function App() {
       return []
     }
 
-    return [...selectedWorkbook.problems]
+    const sortedProblems = [...selectedWorkbook.problems]
       .sort((left, right) => left.number - right.number)
+    const endIndex = gradingEndIndexExclusive ?? currentIndex
+
+    return sortedProblems
+      .slice(gradingStartIndex, endIndex)
       .map((problem) => {
         const rawAnswer = responses[problem.number]
         const studentAnswer = rawAnswer === undefined ? null : rawAnswer
         return evaluateProblem(problem, studentAnswer)
       })
-  }, [responses, selectedWorkbook])
+  }, [currentIndex, gradingEndIndexExclusive, gradingStartIndex, responses, selectedWorkbook])
 
   const summary = useMemo(() => summarizeResults(gradedProblems), [gradedProblems])
+
+  const gradingRangeLabel = useMemo(() => {
+    if (gradedProblems.length === 0) {
+      return null
+    }
+
+    const firstProblem = gradedProblems[0]
+    const lastProblem = gradedProblems[gradedProblems.length - 1]
+
+    return firstProblem.number === lastProblem.number
+      ? `${firstProblem.number}번`
+      : `${firstProblem.number}~${lastProblem.number}번`
+  }, [gradedProblems])
 
   const resetCreateDraft = () => {
     setTitle('새 문제집')
@@ -357,12 +379,24 @@ function App() {
     setStep('dashboard')
   }
 
-  const startGrading = (workbook: Workbook) => {
+  const startGrading = (workbook: Workbook, startProblemNumber = 1) => {
+    const sortedProblems = [...workbook.problems].sort((left, right) => left.number - right.number)
+    const resolvedIndex = sortedProblems.findIndex((problem) => problem.number >= startProblemNumber)
+    const nextStartIndex = resolvedIndex === -1 ? Math.max(sortedProblems.length - 1, 0) : resolvedIndex
+
     setSelectedWorkbook(workbook)
     setResponses({})
     setDraftResponses({})
-    setCurrentIndex(0)
+    setGradingStartIndex(nextStartIndex)
+    setGradingEndIndexExclusive(null)
+    setCurrentIndex(nextStartIndex)
     setStep('grader')
+  }
+
+  const completeGrading = (endIndexExclusive: number) => {
+    setGradingEndIndexExclusive(endIndexExclusive)
+    setCurrentIndex(endIndexExclusive)
+    setStep('result')
   }
 
   const renderPage = () => {
@@ -380,27 +414,109 @@ function App() {
 
     if (step === 'dashboard') {
       return (
-        <DashboardPage
-          userEmail={userEmail ?? ''}
-          workbooks={workbooks}
-          loading={loadingWorkbooks}
-          banner={banner}
-          onCreateWorkbook={() => {
-            resetCreateDraft()
-            setBanner(null)
-            setStep('admin')
-          }}
-          onSelectWorkbook={(workbook) => {
-            setSelectedWorkbook(workbook)
-          }}
-          onGradeWorkbook={startGrading}
-          onEditWorkbook={(workbook) => {
-            loadWorkbookIntoEditor(workbook)
-            setBanner(null)
-            setStep('admin')
-          }}
-          onSignOut={handleSignOut}
-        />
+        <>
+          <DashboardPage
+            userEmail={userEmail ?? ''}
+            workbooks={workbooks}
+            loading={loadingWorkbooks}
+            banner={banner}
+            onCreateWorkbook={() => {
+              resetCreateDraft()
+              setBanner(null)
+              setStep('admin')
+            }}
+            onSelectWorkbook={(workbook) => {
+              setSelectedWorkbook(workbook)
+            }}
+            onGradeWorkbook={(workbook) => {
+              setGradeModalWorkbook(workbook)
+              setGradeStartInput('1')
+              setGradeModalOpen(true)
+            }}
+            onEditWorkbook={(workbook) => {
+              loadWorkbookIntoEditor(workbook)
+              setBanner(null)
+              setStep('admin')
+            }}
+            onSignOut={handleSignOut}
+          />
+
+          {gradeModalOpen && gradeModalWorkbook !== null ? (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-4">
+              <div className="w-full max-w-sm rounded-2xl border bg-white p-6">
+                <h2 className="text-lg font-semibold">채점 시작 문제 번호 선택</h2>
+                <p className="mt-2 text-sm text-slate-500">몇 번부터 채점할지 선택하세요.</p>
+
+                <div className="mt-4">
+                  <label className="block text-sm text-slate-700">시작 문제 번호</label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={gradeModalWorkbook.problems.length}
+                    value={gradeStartInput}
+                    onChange={(e) => {
+                      const next = e.target.value
+                      setGradeStartInput(next)
+
+                      if (next.trim().length === 0) {
+                        // allow empty but show warning
+                        return
+                      }
+
+                      const parsed = Number.parseInt(next, 10)
+
+                      if (!Number.isFinite(parsed)) {
+                        return
+                      }
+
+                      const clamped = Math.max(1, Math.min(gradeModalWorkbook.problems.length, Math.floor(parsed)))
+                      if (String(clamped) !== next) {
+                        setGradeStartInput(String(clamped))
+                      }
+                      
+                    }}
+                    className={`mt-2 w-full rounded-lg px-3 py-2 text-sm outline-none ${
+                      gradeStartInput.trim().length === 0 ? 'border border-red-400' : 'border border-slate-200'
+                    }`}
+                  />
+                  <p className={`mt-2 text-xs ${gradeStartInput.trim().length === 0 ? 'text-red-600' : 'text-slate-500'}`}>
+                    {gradeStartInput.trim().length === 0
+                      ? '시작 문제 번호를 입력해 주세요. 예: 11'
+                      : `전체 ${gradeModalWorkbook.problems.length}문항 중 선택`}
+                  </p>
+                </div>
+
+                <div className="mt-6 flex gap-2">
+                  <button
+                    type="button"
+                    className="flex-1 rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 interactive"
+                    onClick={() => {
+                      setGradeModalOpen(false)
+                      setGradeModalWorkbook(null)
+                    }}
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="button"
+                    className="flex-1 rounded-lg border border-black bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 interactive"
+                    onClick={() => {
+                      const parsed = Number.parseInt(gradeStartInput || '1', 10)
+                      const startNumber = Number.isFinite(parsed) && parsed >= 1 ? parsed : 1
+                      setGradeModalOpen(false)
+                      if (gradeModalWorkbook) {
+                        startGrading(gradeModalWorkbook, startNumber)
+                      }
+                      setGradeModalWorkbook(null)
+                    }}
+                  >
+                    채점 시작
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </>
       )
     }
 
@@ -435,10 +551,11 @@ function App() {
           responses={responses}
           draftResponses={draftResponses}
           currentIndex={currentIndex}
+          startIndex={gradingStartIndex}
           onResponsesChange={setResponses}
           onDraftResponsesChange={setDraftResponses}
           onCurrentIndexChange={setCurrentIndex}
-          onComplete={() => setStep('result')}
+          onComplete={completeGrading}
           onBack={() => setStep('dashboard')}
         />
       )
@@ -448,13 +565,15 @@ function App() {
       return (
         <ResultPage
           workbookTitle={selectedWorkbook.title}
+          gradedRangeLabel={gradingRangeLabel}
           summary={summary}
           gradedProblems={gradedProblems}
           onBack={() => setStep('dashboard')}
           onRegrade={() => {
             setResponses({})
             setDraftResponses({})
-            setCurrentIndex(0)
+            setGradingEndIndexExclusive(null)
+            setCurrentIndex(gradingStartIndex)
             setStep('grader')
           }}
         />

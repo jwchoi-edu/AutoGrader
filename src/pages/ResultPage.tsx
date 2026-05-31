@@ -3,6 +3,7 @@ import type { GradeResult, ProblemType, WorkbookSummary } from '../types'
 
 interface ResultPageProps {
   workbookTitle: string
+  gradedRangeLabel?: string | null
   summary: WorkbookSummary
   gradedProblems: GradeResult[]
   onBack: () => void
@@ -24,6 +25,7 @@ const statusLabels = {
 
 export function ResultPage({
   workbookTitle,
+  gradedRangeLabel,
   summary,
   gradedProblems,
   onBack,
@@ -36,7 +38,7 @@ export function ResultPage({
       <header className="border-b border-slate-200 pb-4">
         <p className="text-xs tracking-widest text-slate-500 uppercase">Result</p>
         <h1 className="mt-1 text-xl font-bold text-black">채점 결과</h1>
-        <p className="mt-1 text-sm text-slate-600">{workbookTitle}</p>
+        <p className="mt-1 text-sm text-slate-600">{workbookTitle} {gradedRangeLabel ? `· ${gradedRangeLabel}` : null}</p>
       </header>
 
       <div className="grid grid-cols-2 gap-3">
