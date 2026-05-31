@@ -36,9 +36,13 @@ export function ResultPage({
   return (
     <div className="space-y-6">
       <header className="border-b border-slate-200 pb-4">
-        <p className="text-xs tracking-widest text-slate-500 uppercase">Result</p>
+        <p className="text-xs tracking-widest text-slate-500 uppercase">
+          Result
+        </p>
         <h1 className="mt-1 text-xl font-bold text-black">채점 결과</h1>
-        <p className="mt-1 text-sm text-slate-600">{workbookTitle} {gradedRangeLabel ? `· ${gradedRangeLabel}` : null}</p>
+        <p className="mt-1 text-sm text-slate-600">
+          {workbookTitle} {gradedRangeLabel ? `· ${gradedRangeLabel}` : null}
+        </p>
       </header>
 
       <div className="grid grid-cols-2 gap-3">
@@ -111,11 +115,18 @@ export function ResultPage({
                   </div>
                 </div>
 
-                {result.status === 'incorrect' || result.status === 'skipped' ? (
+                {result.status === 'incorrect' ||
+                result.status === 'skipped' ? (
                   <div className="mt-1 space-y-0.5 text-sm text-slate-600">
                     <p>
                       내 답:{' '}
-                      <span className={result.status === 'incorrect' ? 'text-red-600' : 'text-slate-500'}>
+                      <span
+                        className={
+                          result.status === 'incorrect'
+                            ? 'text-red-600'
+                            : 'text-slate-500'
+                        }
+                      >
                         {result.studentAnswer && result.studentAnswer.length > 0
                           ? result.studentAnswer
                           : '—'}
@@ -123,7 +134,9 @@ export function ResultPage({
                     </p>
                     <p>
                       정답:{' '}
-                      <span className="text-black">{result.correctAnswer ?? '—'}</span>
+                      <span className="text-black">
+                        {result.correctAnswer ?? '—'}
+                      </span>
                     </p>
                   </div>
                 ) : result.status === 'correct' ? (
@@ -138,11 +151,15 @@ export function ResultPage({
                     </p>
                     <p>
                       정답:{' '}
-                      <span className="text-black">{result.correctAnswer ?? '—'}</span>
+                      <span className="text-black">
+                        {result.correctAnswer ?? '—'}
+                      </span>
                     </p>
                   </div>
                 ) : (
-                  <p className="mt-1 text-sm text-slate-500">단순 채점 불가 문항입니다.</p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    단순 채점 불가 문항입니다.
+                  </p>
                 )}
               </div>
             </div>
@@ -156,8 +173,20 @@ export function ResultPage({
           className="flex-1 rounded-lg border border-slate-200 px-4 py-2.5 text-sm text-black transition hover:bg-slate-100 interactive"
           onClick={onBack}
         >
-          <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M9 6L3 12l6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            className="inline-block mr-2 -ml-1 h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+          >
+            <path
+              d="M9 6L3 12l6 6"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           목록으로
         </button>
@@ -166,7 +195,13 @@ export function ResultPage({
           className="flex-1 rounded-lg border border-black bg-black px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 interactive"
           onClick={onRegrade}
         >
-          <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <svg
+            className="inline-block mr-2 -ml-1 h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+          >
             <path d="M5 3v18l15-9L5 3z" fill="currentColor" />
           </svg>
           다시 채점

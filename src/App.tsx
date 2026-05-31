@@ -25,9 +25,13 @@ const LOCAL_WORKBOOKS_KEY = 'autograder.workbooks'
 
 const sampleWorkbook = createSampleWorkbook()
 
-const clampProblemCount = (value: number) => Math.max(1, Math.min(100, Math.floor(value) || 1))
+const clampProblemCount = (value: number) =>
+  Math.max(1, Math.min(100, Math.floor(value) || 1))
 
-const resizeDraftRows = (rows: ProblemDraft[], nextCount: number): ProblemDraft[] => {
+const resizeDraftRows = (
+  rows: ProblemDraft[],
+  nextCount: number,
+): ProblemDraft[] => {
   const safeCount = clampProblemCount(nextCount)
 
   if (safeCount === rows.length) {
@@ -41,11 +45,14 @@ const resizeDraftRows = (rows: ProblemDraft[], nextCount: number): ProblemDraft[
     }))
   }
 
-  const extraRows = Array.from({ length: safeCount - rows.length }, (_, index) => ({
-    number: String(rows.length + index + 1),
-    type: 'MULTIPLE_CHOICE' as const,
-    correctAnswer: '',
-  }))
+  const extraRows = Array.from(
+    { length: safeCount - rows.length },
+    (_, index) => ({
+      number: String(rows.length + index + 1),
+      type: 'MULTIPLE_CHOICE' as const,
+      correctAnswer: '',
+    }),
+  )
 
   return [
     ...rows.map((row, index) => ({
@@ -86,38 +93,59 @@ const saveLocalWorkbooks = (workbooks: Workbook[]) => {
 function App() {
   const isConfigured = hasSupabaseConfig && supabase !== null
 
-  const [step, setStep] = useState<AppStep>(isConfigured ? 'login' : 'dashboard')
-  const [authStatus, setAuthStatus] = useState<AuthStatus>(isConfigured ? 'loading' : 'authenticated')
-  const [userId, setUserId] = useState<string | null>(isConfigured ? null : 'demo-user')
+  const [step, setStep] = useState<AppStep>(
+    isConfigured ? 'login' : 'dashboard',
+  )
+  const [authStatus, setAuthStatus] = useState<AuthStatus>(
+    isConfigured ? 'loading' : 'authenticated',
+  )
+  const [userId, setUserId] = useState<string | null>(
+    isConfigured ? null : 'demo-user',
+  )
   const [userEmail, setUserEmail] = useState<string | null>(
     isConfigured ? null : `demo${SCHOOL_DOMAIN}`,
   )
   const [authMessage, setAuthMessage] = useState<string | null>(
-    isConfigured ? null : '데모 모드입니다. Supabase 환경 변수를 설정하면 Google OAuth가 활성화됩니다.',
+    isConfigured
+      ? null
+      : '데모 모드입니다. Supabase 환경 변수를 설정하면 Google OAuth가 활성화됩니다.',
   )
   const [banner, setBanner] = useState<string | null>(null)
   const [workbooks, setWorkbooks] = useState<Workbook[]>(loadLocalWorkbooks)
   const [selectedWorkbook, setSelectedWorkbook] = useState<Workbook | null>(
     loadLocalWorkbooks()[0] ?? sampleWorkbook,
   )
-  const [editingWorkbookId, setEditingWorkbookId] = useState<string | null>(null)
+  const [editingWorkbookId, setEditingWorkbookId] = useState<string | null>(
+    null,
+  )
   const [title, setTitle] = useState<string>(() => {
     const existing = loadLocalWorkbooks()
     return `새 문제집 #${existing.length + 1}`
   })
-  const [problemCountInput, setProblemCountInput] = useState<string>(String(createDraftRows().length))
+  const [problemCountInput, setProblemCountInput] = useState<string>(
+    String(createDraftRows().length),
+  )
   const [draftRows, setDraftRows] = useState<ProblemDraft[]>(createDraftRows)
   const [responses, setResponses] = useState<Record<number, string | null>>({})
-  const [draftResponses, setDraftResponses] = useState<Record<number, string>>({})
+  const [draftResponses, setDraftResponses] = useState<Record<number, string>>(
+    {},
+  )
   const [currentIndex, setCurrentIndex] = useState(0)
   const [gradingStartIndex, setGradingStartIndex] = useState(0)
-  const [gradingEndIndexExclusive, setGradingEndIndexExclusive] = useState<number | null>(null)
+  const [gradingEndIndexExclusive, setGradingEndIndexExclusive] = useState<
+    number | null
+  >(null)
   const [loadingWorkbooks, setLoadingWorkbooks] = useState(false)
-  const [validationErrors, setValidationErrors] = useState<string[] | null>(null)
+  const [validationErrors, setValidationErrors] = useState<string[] | null>(
+    null,
+  )
   const [gradeModalOpen, setGradeModalOpen] = useState(false)
-  const [gradeModalWorkbook, setGradeModalWorkbook] = useState<Workbook | null>(null)
+  const [gradeModalWorkbook, setGradeModalWorkbook] = useState<Workbook | null>(
+    null,
+  )
   const [gradeStartInput, setGradeStartInput] = useState<string>('1')
-  const [scrollToTopOnNextDashboard, setScrollToTopOnNextDashboard] = useState(false)
+  const [scrollToTopOnNextDashboard, setScrollToTopOnNextDashboard] =
+    useState(false)
 
   useEffect(() => {
     const client = supabase
@@ -133,7 +161,9 @@ function App() {
         setAuthStatus('blocked')
         setUserId(id)
         setUserEmail(email)
-        setAuthMessage(`로그인 이메일은 반드시 ${SCHOOL_DOMAIN} 로 끝나야 합니다.`)
+        setAuthMessage(
+          `로그인 이메일은 반드시 ${SCHOOL_DOMAIN} 로 끝나야 합니다.`,
+        )
         blockUnauthorizedEmail(email)
         void client.auth.signOut()
         setStep('login')
@@ -173,22 +203,24 @@ function App() {
       handleSession(session.user.email ?? '', session.user.id)
     }
 
-    const { data: listener } = client.auth.onAuthStateChange((_event, session) => {
-      if (!active) {
-        return
-      }
+    const { data: listener } = client.auth.onAuthStateChange(
+      (_event, session) => {
+        if (!active) {
+          return
+        }
 
-      if (session === null) {
-        setAuthStatus('signedOut')
-        setUserId(null)
-        setUserEmail(null)
-        setAuthMessage(null)
-        setStep('login')
-        return
-      }
+        if (session === null) {
+          setAuthStatus('signedOut')
+          setUserId(null)
+          setUserEmail(null)
+          setAuthMessage(null)
+          setStep('login')
+          return
+        }
 
-      handleSession(session.user.email ?? '', session.user.id)
-    })
+        handleSession(session.user.email ?? '', session.user.id)
+      },
+    )
 
     void bootstrap()
 
@@ -199,7 +231,12 @@ function App() {
   }, [isConfigured])
 
   useEffect(() => {
-    if (authStatus !== 'authenticated' || supabase === null || userId === null || !isConfigured) {
+    if (
+      authStatus !== 'authenticated' ||
+      supabase === null ||
+      userId === null ||
+      !isConfigured
+    ) {
       return
     }
 
@@ -218,7 +255,8 @@ function App() {
       }
 
       const remoteWorkbooks = (data ?? []) as Workbook[]
-      const nextWorkbooks = remoteWorkbooks.length > 0 ? remoteWorkbooks : [sampleWorkbook]
+      const nextWorkbooks =
+        remoteWorkbooks.length > 0 ? remoteWorkbooks : [sampleWorkbook]
 
       setWorkbooks(nextWorkbooks)
       setBanner(
@@ -261,20 +299,28 @@ function App() {
       return []
     }
 
-    const sortedProblems = [...selectedWorkbook.problems]
-      .sort((left, right) => left.number - right.number)
+    const sortedProblems = [...selectedWorkbook.problems].sort(
+      (left, right) => left.number - right.number,
+    )
     const endIndex = gradingEndIndexExclusive ?? currentIndex
 
-    return sortedProblems
-      .slice(gradingStartIndex, endIndex)
-      .map((problem) => {
-        const rawAnswer = responses[problem.number]
-        const studentAnswer = rawAnswer === undefined ? null : rawAnswer
-        return evaluateProblem(problem, studentAnswer)
-      })
-  }, [currentIndex, gradingEndIndexExclusive, gradingStartIndex, responses, selectedWorkbook])
+    return sortedProblems.slice(gradingStartIndex, endIndex).map((problem) => {
+      const rawAnswer = responses[problem.number]
+      const studentAnswer = rawAnswer === undefined ? null : rawAnswer
+      return evaluateProblem(problem, studentAnswer)
+    })
+  }, [
+    currentIndex,
+    gradingEndIndexExclusive,
+    gradingStartIndex,
+    responses,
+    selectedWorkbook,
+  ])
 
-  const summary = useMemo(() => summarizeResults(gradedProblems), [gradedProblems])
+  const summary = useMemo(
+    () => summarizeResults(gradedProblems),
+    [gradedProblems],
+  )
 
   const gradingRangeLabel = useMemo(() => {
     if (gradedProblems.length === 0) {
@@ -358,7 +404,11 @@ function App() {
       return
     }
 
-    const normalized = normalizeDraftToWorkbook(title, userId ?? 'demo-user', draftRows)
+    const normalized = normalizeDraftToWorkbook(
+      title,
+      userId ?? 'demo-user',
+      draftRows,
+    )
 
     if (normalized.workbook === null) {
       setValidationErrors(normalized.errors)
@@ -370,12 +420,16 @@ function App() {
     const isEditingPersisted =
       editingWorkbookId !== null && editingWorkbookId !== sampleWorkbook.id
     const existingWorkbook = isEditingPersisted
-      ? workbooks.find((workbook) => workbook.id === editingWorkbookId) ?? null
+      ? (workbooks.find((workbook) => workbook.id === editingWorkbookId) ??
+        null)
       : null
 
     const workbookToSave: Workbook = {
       ...normalized.workbook,
-      id: isEditingPersisted && existingWorkbook !== null ? existingWorkbook.id : normalized.workbook.id,
+      id:
+        isEditingPersisted && existingWorkbook !== null
+          ? existingWorkbook.id
+          : normalized.workbook.id,
       created_at:
         isEditingPersisted && existingWorkbook !== null
           ? existingWorkbook.created_at
@@ -400,16 +454,27 @@ function App() {
     setWorkbooks(nextWorkbooks)
     saveLocalWorkbooks(nextWorkbooks)
     setSelectedWorkbook(workbookToSave)
-    setBanner(isConfigured ? '문제집을 데이터베이스에 저장했습니다.' : '문제집을 로컬에 저장했습니다.')
+    setBanner(
+      isConfigured
+        ? '문제집을 데이터베이스에 저장했습니다.'
+        : '문제집을 로컬에 저장했습니다.',
+    )
     // Ensure dashboard scrolls to top when we return here after saving
     setScrollToTopOnNextDashboard(true)
     setStep('dashboard')
   }
 
   const startGrading = (workbook: Workbook, startProblemNumber = 1) => {
-    const sortedProblems = [...workbook.problems].sort((left, right) => left.number - right.number)
-    const resolvedIndex = sortedProblems.findIndex((problem) => problem.number >= startProblemNumber)
-    const nextStartIndex = resolvedIndex === -1 ? Math.max(sortedProblems.length - 1, 0) : resolvedIndex
+    const sortedProblems = [...workbook.problems].sort(
+      (left, right) => left.number - right.number,
+    )
+    const resolvedIndex = sortedProblems.findIndex(
+      (problem) => problem.number >= startProblemNumber,
+    )
+    const nextStartIndex =
+      resolvedIndex === -1
+        ? Math.max(sortedProblems.length - 1, 0)
+        : resolvedIndex
 
     setSelectedWorkbook(workbook)
     setResponses({})
@@ -471,11 +536,17 @@ function App() {
           {gradeModalOpen && gradeModalWorkbook !== null ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-4">
               <div className="w-full max-w-sm rounded-2xl border bg-white p-6">
-                <h2 className="text-lg font-semibold">채점 시작 문제 번호 선택</h2>
-                <p className="mt-2 text-sm text-slate-500">몇 번부터 채점할지 선택하세요.</p>
+                <h2 className="text-lg font-semibold">
+                  채점 시작 문제 번호 선택
+                </h2>
+                <p className="mt-2 text-sm text-slate-500">
+                  몇 번부터 채점할지 선택하세요.
+                </p>
 
                 <div className="mt-4">
-                  <label className="block text-sm text-slate-700">시작 문제 번호</label>
+                  <label className="block text-sm text-slate-700">
+                    시작 문제 번호
+                  </label>
                   <input
                     type="number"
                     min={1}
@@ -496,17 +567,26 @@ function App() {
                         return
                       }
 
-                      const clamped = Math.max(1, Math.min(gradeModalWorkbook.problems.length, Math.floor(parsed)))
+                      const clamped = Math.max(
+                        1,
+                        Math.min(
+                          gradeModalWorkbook.problems.length,
+                          Math.floor(parsed),
+                        ),
+                      )
                       if (String(clamped) !== next) {
                         setGradeStartInput(String(clamped))
                       }
-                      
                     }}
                     className={`mt-2 w-full rounded-lg px-3 py-2 text-sm outline-none ${
-                      gradeStartInput.trim().length === 0 ? 'border border-red-400' : 'border border-slate-200'
+                      gradeStartInput.trim().length === 0
+                        ? 'border border-red-400'
+                        : 'border border-slate-200'
                     }`}
                   />
-                  <p className={`mt-2 text-xs ${gradeStartInput.trim().length === 0 ? 'text-red-600' : 'text-slate-500'}`}>
+                  <p
+                    className={`mt-2 text-xs ${gradeStartInput.trim().length === 0 ? 'text-red-600' : 'text-slate-500'}`}
+                  >
                     {gradeStartInput.trim().length === 0
                       ? '시작 문제 번호를 입력해 주세요. 예: 11'
                       : `전체 ${gradeModalWorkbook.problems.length}문항 중 선택`}
@@ -522,8 +602,20 @@ function App() {
                       setGradeModalWorkbook(null)
                     }}
                   >
-                    <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                      <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg
+                      className="inline-block mr-2 -ml-1 h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden
+                    >
+                      <path
+                        d="M6 6l12 12M6 18L18 6"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                     취소
                   </button>
@@ -532,7 +624,8 @@ function App() {
                     className="flex-1 rounded-lg border border-black bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 interactive"
                     onClick={() => {
                       const parsed = Number.parseInt(gradeStartInput || '1', 10)
-                      const startNumber = Number.isFinite(parsed) && parsed >= 1 ? parsed : 1
+                      const startNumber =
+                        Number.isFinite(parsed) && parsed >= 1 ? parsed : 1
                       setGradeModalOpen(false)
                       if (gradeModalWorkbook) {
                         startGrading(gradeModalWorkbook, startNumber)
@@ -540,7 +633,13 @@ function App() {
                       setGradeModalWorkbook(null)
                     }}
                   >
-                    <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <svg
+                      className="inline-block mr-2 -ml-1 h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden
+                    >
                       <path d="M5 3v18l15-9L5 3z" fill="currentColor" />
                     </svg>
                     채점 시작

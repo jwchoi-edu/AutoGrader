@@ -9,7 +9,8 @@ import type {
 
 const createId = () => globalThis.crypto.randomUUID()
 
-const normalizeText = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase()
+const normalizeText = (value: string) =>
+  value.trim().replace(/\s+/g, ' ').toLowerCase()
 
 export const createDraftRows = (count = 6): ProblemDraft[] =>
   Array.from({ length: count }, (_, index) => ({
@@ -91,7 +92,8 @@ export const normalizeDraftToWorkbook = (
       problems: normalizedRows.map((row) => ({
         number: row.number,
         type: row.type,
-        correct_answer: row.type === 'COMPLEX_ANSWER' ? null : row.correctAnswer,
+        correct_answer:
+          row.type === 'COMPLEX_ANSWER' ? null : row.correctAnswer,
       })),
     },
     errors,
@@ -137,11 +139,17 @@ export const evaluateProblem = (
 }
 
 export const summarizeResults = (results: GradeResult[]): WorkbookSummary => {
-  const gradable = results.filter((result) => result.type !== 'COMPLEX_ANSWER').length
+  const gradable = results.filter(
+    (result) => result.type !== 'COMPLEX_ANSWER',
+  ).length
   const correct = results.filter((result) => result.status === 'correct').length
-  const incorrect = results.filter((result) => result.status === 'incorrect').length
+  const incorrect = results.filter(
+    (result) => result.status === 'incorrect',
+  ).length
   const skipped = results.filter((result) => result.status === 'skipped').length
-  const ungradable = results.filter((result) => result.status === 'ungradable').length
+  const ungradable = results.filter(
+    (result) => result.status === 'ungradable',
+  ).length
 
   return {
     total: results.length,

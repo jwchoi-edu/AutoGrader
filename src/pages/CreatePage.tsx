@@ -44,7 +44,9 @@ export function CreatePage({
 
   const updateDraftRow = (index: number, nextRow: Partial<ProblemDraft>) => {
     onDraftRowsChange(
-      draftRows.map((row, rowIndex) => (rowIndex === index ? { ...row, ...nextRow } : row)),
+      draftRows.map((row, rowIndex) =>
+        rowIndex === index ? { ...row, ...nextRow } : row,
+      ),
     )
   }
 
@@ -77,7 +79,9 @@ export function CreatePage({
     <div className="space-y-5">
       <header className="flex items-start justify-between gap-3 border-b border-slate-200 pb-4">
         <div>
-          <p className="text-xs tracking-widest text-slate-500 uppercase">Create</p>
+          <p className="text-xs tracking-widest text-slate-500 uppercase">
+            Create
+          </p>
           <h1 className="mt-1 text-xl font-bold text-black">문제집 등록</h1>
         </div>
         <button
@@ -85,8 +89,20 @@ export function CreatePage({
           className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 transition hover:bg-slate-100 interactive"
           onClick={onBack}
         >
-          <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M9 6L3 12l6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            className="inline-block mr-2 -ml-1 h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+          >
+            <path
+              d="M9 6L3 12l6 6"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           목록
         </button>
@@ -122,7 +138,9 @@ export function CreatePage({
               : 'border border-slate-200'
           }`}
         />
-        <p className={`text-xs ${problemCount.trim().length === 0 ? 'text-red-600' : 'text-slate-500'}`}>
+        <p
+          className={`text-xs ${problemCount.trim().length === 0 ? 'text-red-600' : 'text-slate-500'}`}
+        >
           {problemCount.trim().length === 0
             ? '문제 개수는 1개 이상, 100개 이하로 입력해 주세요.'
             : '입력한 개수만큼 문제 행이 자동으로 생성됩니다.'}
@@ -158,7 +176,10 @@ export function CreatePage({
                       const nextType = event.target.value as ProblemType
                       updateDraftRow(index, {
                         type: nextType,
-                        correctAnswer: nextType === 'COMPLEX_ANSWER' ? '' : row.correctAnswer,
+                        correctAnswer:
+                          nextType === 'COMPLEX_ANSWER'
+                            ? ''
+                            : row.correctAnswer,
                       })
                     }}
                     className="w-full rounded border border-slate-200 bg-white px-1 py-1 text-[11px] leading-tight text-black outline-none focus:border-slate-400"
@@ -180,12 +201,14 @@ export function CreatePage({
                           type="button"
                           className={`rounded border px-0 py-1.5 text-xs font-semibold transition ${
                             row.correctAnswer === choice
-                                ? 'border-black bg-black text-white interactive'
+                              ? 'border-black bg-black text-white interactive'
                               : 'border-slate-200 bg-white text-black hover:bg-slate-100'
                           }`}
                           onClick={() => {
                             updateDraftRow(index, { correctAnswer: choice })
-                            queueFocus(Math.min(index + 1, draftRows.length - 1))
+                            queueFocus(
+                              Math.min(index + 1, draftRows.length - 1),
+                            )
                           }}
                         >
                           {choice}
@@ -199,7 +222,9 @@ export function CreatePage({
                       rowRefs.current[index] = element
                     }}
                     value={isComplexAnswer ? '' : row.correctAnswer}
-                    onChange={(event) => handleDraftAnswerChange(index, event.target.value)}
+                    onChange={(event) =>
+                      handleDraftAnswerChange(index, event.target.value)
+                    }
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
                         event.preventDefault()
@@ -238,8 +263,20 @@ export function CreatePage({
         className="w-full rounded-lg border border-black bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
         onClick={onSave}
       >
-        <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-          <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          className="inline-block mr-2 -ml-1 h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden
+        >
+          <path
+            d="M12 5v14M5 12h14"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
         문제집 저장
       </button>
@@ -249,7 +286,9 @@ export function CreatePage({
           <div className="flex max-h-[calc(100vh-2rem)] w-full max-w-md flex-col rounded-2xl border border-red-200 bg-white p-5 shadow-xl">
             <div className="flex-1 overflow-y-auto rounded-xl border border-red-200 bg-red-50 p-4">
               <p className="text-sm font-semibold text-red-700">검증 실패</p>
-              <p className="mt-1 text-sm text-red-600">문제집 저장 전에 아래 항목을 수정해 주세요.</p>
+              <p className="mt-1 text-sm text-red-600">
+                문제집 저장 전에 아래 항목을 수정해 주세요.
+              </p>
 
               <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-red-700">
                 {validationErrors.map((error) => (
@@ -263,8 +302,20 @@ export function CreatePage({
               className="mt-4 w-full rounded-lg border border-black bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 interactive"
               onClick={onCloseValidationErrors}
             >
-              <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                <path d="M5 12l4 4L19 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                className="inline-block mr-2 -ml-1 h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <path
+                  d="M5 12l4 4L19 6"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               확인
             </button>

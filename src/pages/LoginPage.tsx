@@ -12,10 +12,15 @@ export function LoginPage({ authMessage, onSignIn }: LoginPageProps) {
       <header className="mb-8 border-b border-slate-200 pb-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-xs tracking-widest text-slate-500">AutoGrader by Jongwon Choi</p>
-            <h1 className="mt-2 text-2xl font-bold text-black">학교 계정 로그인</h1>
+            <p className="text-xs tracking-widest text-slate-500">
+              AutoGrader by Jongwon Choi
+            </p>
+            <h1 className="mt-2 text-2xl font-bold text-black">
+              학교 계정 로그인
+            </h1>
             <p className="mt-2 text-sm text-slate-600">
-              Google SSO로 로그인합니다. {SCHOOL_DOMAIN} 도메인 계정만 접근할 수 있습니다.
+              Google SSO로 로그인합니다. {SCHOOL_DOMAIN} 도메인 계정만 접근할 수
+              있습니다.
             </p>
           </div>
 
@@ -25,9 +30,30 @@ export function LoginPage({ authMessage, onSignIn }: LoginPageProps) {
             rel="noopener noreferrer"
             className="inline-flex shrink-0 items-center gap-1 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-black interactive"
           >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
-              <text x="12" y="16" textAnchor="middle" fontSize="12" fontWeight="700" fill="currentColor">?</text>
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                strokeWidth="1.7"
+              />
+              <text
+                x="12"
+                y="16"
+                textAnchor="middle"
+                fontSize="12"
+                fontWeight="700"
+                fill="currentColor"
+              >
+                ?
+              </text>
             </svg>
             도움말
           </a>
@@ -101,5 +127,7 @@ export function isAllowedEmail(email: string): boolean {
 }
 
 export function blockUnauthorizedEmail(email: string): void {
-  window.alert(`허용되지 않은 계정입니다.\n로그인 이메일은 반드시 ${SCHOOL_DOMAIN} 로 끝나야 합니다.\n\n현재: ${email}`)
+  window.alert(
+    `허용되지 않은 계정입니다.\n로그인 이메일은 반드시 ${SCHOOL_DOMAIN} 로 끝나야 합니다.\n\n현재: ${email}`,
+  )
 }

@@ -12,7 +12,8 @@
     "build:dev": "tsc -b && vite build --mode development",
     "build:prod": "tsc -b && vite build --mode production",
     "lint": "biome lint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "biome format . --write"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.59.0",

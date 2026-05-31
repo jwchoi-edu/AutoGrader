@@ -19,8 +19,10 @@ export function Layout({ children }: LayoutProps) {
             className="text-slate-600 hover:text-black"
           >
             Source:{' '}
-            <span className="text-blue-600 hover:text-blue-700">jwchoi-edu/AutoGrader</span>
-            {' '}— GPL 3.0
+            <span className="text-blue-600 hover:text-blue-700">
+              jwchoi-edu/AutoGrader
+            </span>{' '}
+            — GPL 3.0
           </a>
         </div>
       </footer>
