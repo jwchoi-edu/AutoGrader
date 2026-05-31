@@ -26,7 +26,7 @@ export const createSampleWorkbook = (): Workbook => ({
   updated_at: new Date('2026-05-31T09:00:00.000Z').toISOString(),
   problems: [
     { number: 1, type: 'MULTIPLE_CHOICE', correct_answer: '4' },
-    { number: 2, type: 'SHORT_ANSWER', correct_answer: '중심값' },
+    { number: 2, type: 'SHORT_ANSWER', correct_answer: '중동고' },
     { number: 3, type: 'COMPLEX_ANSWER', correct_answer: null },
     { number: 4, type: 'MULTIPLE_CHOICE', correct_answer: '2' },
     { number: 5, type: 'SHORT_ANSWER', correct_answer: '42' },
