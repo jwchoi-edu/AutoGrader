@@ -127,7 +127,8 @@ export function GraderPage({
                     committedAnswer === choice
                       ? 'border-black bg-black text-white'
                       : 'border-slate-200 text-black hover:border-black hover:bg-slate-100'
-                  }`}
+                  }
+                  active:bg-black active:text-white`}
                   onClick={() => recordResponse(choice)}
                 >
                   {choice}
