@@ -535,7 +535,7 @@ function App() {
 
           {gradeModalOpen && gradeModalWorkbook !== null ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-4">
-              <div className="w-full max-w-sm rounded-2xl border bg-white p-6">
+              <div className="w-full max-w-sm rounded-2xl border-slate-200 bg-white p-6">
                 <h2 className="text-lg font-semibold">
                   채점 시작 문제 번호 선택
                 </h2>

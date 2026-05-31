@@ -283,7 +283,7 @@ export function CreatePage({
 
       {validationErrors !== null && validationErrors.length > 0 ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-4">
-          <div className="flex max-h-[calc(100vh-2rem)] w-full max-w-md flex-col rounded-2xl border border-red-200 bg-white p-5 shadow-xl">
+          <div className="flex max-h-[calc(100vh-2rem)] w-full max-w-md flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-xl">
             <div className="flex-1 overflow-y-auto rounded-xl border border-red-200 bg-red-50 p-4">
               <p className="text-sm font-semibold text-red-700">검증 실패</p>
               <p className="mt-1 text-sm text-red-600">
