@@ -167,7 +167,7 @@ export function ResultPage({
           onClick={onRegrade}
         >
           <svg className="inline-block mr-2 -ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M5 3v18l15-9L5 3z" fill="currentColor" />
           </svg>
           다시 채점
         </button>
