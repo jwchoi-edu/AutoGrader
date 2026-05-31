@@ -28,7 +28,7 @@ export const createSampleWorkbook = (): Workbook => ({
     { number: 2, type: 'SHORT_ANSWER', correct_answer: '중심값' },
     { number: 3, type: 'COMPLEX_ANSWER', correct_answer: null },
     { number: 4, type: 'MULTIPLE_CHOICE', correct_answer: '2' },
-    { number: 5, type: 'SHORT_ANSWER', correct_answer: '포인터' },
+    { number: 5, type: 'SHORT_ANSWER', correct_answer: '42' },
   ],
 })
 
